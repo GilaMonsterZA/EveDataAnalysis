@@ -4,8 +4,8 @@
 # 10000002 - The Forge
 
 loadKill <- function(region) {
-  library("RCurl")
-  library("XML")
+  require("RCurl")
+  require("XML")
   for (page in (1:10)) {
     url <- paste("https://zkillboard.com/api/losses/regionID/", region, "/page/", page, "/pastSeconds/86400/xml/", sep= "")
     doc <- getURL(url)
