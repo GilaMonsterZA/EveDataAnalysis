@@ -18,13 +18,13 @@ loadKillWar <- function(region, start, end) {
 
 extractKillSummary <- function(KillList) {
   
-  killStats <- data.frame(numeric(0), string(0), numeric(0), numeric(0), numeric(0))
+  killStats <- data.frame(numeric(0), character(0), numeric(0), numeric(0), numeric(0))
   colnames(killStats) <- c("V1","V2","V3", "V4", "V5")
   
   for (i in KillList) {
     if (length(xpathSApply(xmlDoc(i), "/row/rowset[@name='attackers']/row[@characterName!='']/@characterID")) > 0) {# not a NPC kill
       killStats <- rbind(killStats,
-            cbind(1,
+            cbind(xpathSApply(xmlDoc(i), "/row/@killID"),
               substr(xpathSApply(xmlDoc(i), "/row/@killTime"),1,10),
               xpathSApply(xmlDoc(i), "/row/rowset[@name='attackers']/row[1]/@shipTypeID"), 
               xpathSApply(xmlDoc(i), "/row/rowset[@name='attackers']/row[1]/@weaponTypeID"), 
@@ -34,25 +34,31 @@ extractKillSummary <- function(KillList) {
       colnames(killStats) <- c("V1","V2","V3", "V4", "V5")
     }
   }
+  killStats
 }
   
-extractKillItems <- function(KillList)  
-
-  cbind(1,
-        substr(xpathSApply(xmlDoc(test), "/row/@killTime"),1,10),
-        xpathSApply(xmlDoc(test), "/row/rowset[@name='attackers']/row[1]/@shipTypeID"), 
-        xpathSApply(xmlDoc(test), "/row/rowset[@name='attackers']/row[1]/@weaponTypeID"), 
-        xpathSApply(xmlDoc(test), "/row/victim/@shipTypeID") 
-  )
+extractKillItems <- function(KillList)  {
+  counter<-0
+  killItemStats <- data.frame(numeric(0), numeric(0), numeric(0), numeric(0), numeric(0))
+  colnames(killItemStats) <- c("V1","V2","V3", "V4", "V5")
   
-  cbind(1,
-        as.vector(xpathSApply(xmlDoc(killsVale[[1]]), "/row/rowset[@name='items']/row/@typeID"), mode = "numeric"),
-        as.vector(xpathSApply(xmlDoc(killsVale[[1]]), "/row/rowset[@name='items']/row/@flag"), mode = "numeric"),
-        as.vector(xpathSApply(xmlDoc(killsVale[[1]]), "/row/rowset[@name='items']/row/@qtyDropped"), mode = "numeric"),
-        as.vector(xpathSApply(xmlDoc(killsVale[[1]]), "/row/rowset[@name='items']/row/@qtyDestroyed"), mode = "numeric")
-  )
+  for (i in KillList) {
+    counter<-counter+1
+    if (length(xpathSApply(xmlDoc(i), "/row/rowset[@name='attackers']/row[@characterName!='']/@characterID")) > 0) {# not a NPC kill
+      if (length(xpathSApply(xmlDoc(i), "/row/rowset[@name='items']")) > 0)  {
   
+        killItemStats <- rbind(killItemStats,
+          cbind(xpathSApply(xmlDoc(i), "/row/@killID"),
+                as.vector(xpathSApply(xmlDoc(i), "/row/rowset[@name='items']/row/@typeID"), mode = "numeric"),
+                as.vector(xpathSApply(xmlDoc(i), "/row/rowset[@name='items']/row/@flag"), mode = "numeric"),
+                as.vector(xpathSApply(xmlDoc(i), "/row/rowset[@name='items']/row/@qtyDropped"), mode = "numeric"),
+                as.vector(xpathSApply(xmlDoc(i), "/row/rowset[@name='items']/row/@qtyDestroyed"), mode = "numeric")
+          )
+        )
+      }
+    }
+    colnames(killItemStats) <- c("V1","V2","V3", "V4", "V5")
+  }
+  killItemStats
 }
 
-test <- getURL("https://zkillboard.com/api/kills/killID/53617156/xml/")
-test <- xmlParse(doc)
