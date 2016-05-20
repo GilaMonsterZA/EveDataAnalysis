@@ -62,3 +62,23 @@ extractKillItems <- function(KillList)  {
   killItemStats
 }
 
+summariseKilledShips <- function(ShipSummary) {
+  victimShipTotal <- aggregate(ShipSummaryVale$killID>0, by=list(ShipSummaryVale$VictimShip), FUN=sum)
+  colnames(victimShipTotal) <- c("TypeID", "Total")
+  victimShipTotal <- victimShipTotal[with(victimShipTotal, order(-Total)), ]
+  victimShipTotal
+}
+
+summariseAttackerShips <- function(ShipSummary) {
+  attackerShipTotal <- aggregate(ShipSummaryVale$killID>0, by=list(ShipSummaryVale$HighestDamageShip), FUN=sum)
+  colnames(attackerShipTotal) <- c("TypeID", "Total")
+  attackerShipTotal <- attackerShipTotal[with(attackerShipTotal, order(-Total)), ]
+  attackerShipTotal
+}
+
+summariseAttackerWeapons <- function(ShipSummary) {
+  attackerWeaponTotal <- aggregate(ShipSummaryVale$killID>0, by=list(ShipSummaryVale$HighestDamageweapon), FUN=sum)
+  colnames(attackerWeaponTotal) <- c("TypeID", "Total")
+  attackerWeaponTotal <- attackerWeaponTotal[with(attackerWeaponTotal, order(-Total)), ]
+  attackerWeaponTotal
+}
