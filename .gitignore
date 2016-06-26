@@ -34,10 +34,11 @@ vignettes/*.pdf
 
 # Common data files
 # Comma-delimites lists
-.csv
+*.csv
 
 # XML
-.xml
+*.xml
 
 # json data files
-.json
+*.json
+Scratch.txt

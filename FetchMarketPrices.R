@@ -11,3 +11,13 @@ loadMarketPrices <- function(items, useSystem) {
   marketData <- cbind.data.frame(types, buyPrice, buyVolume, sellPrice, sellVolume)
   marketData
 }
+
+# Historical Market data 
+ForgePriceAsOf <- function(TypeID, Date) { # Date as a string in the format '2015-04-02T00:00:00'
+  require(jsonlite)
+  priceHistory_addr <- paste("https://crest-tq.eveonline.com/market/10000002/types/", TypeID, "/history/", sep= "") #Fix region number
+  market.json <- fromJSON(readLines(priceHistory_addr))
+  MarketValues <- market.json$items
+  as.integer(MarketValues[MarketValues$date==Date,5])
+}
+
