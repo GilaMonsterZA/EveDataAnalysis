@@ -13,11 +13,16 @@ loadMarketPrices <- function(items, useSystem) {
 }
 
 # Historical Market data 
-ForgePriceAsOf <- function(TypeID, Date) { # Date as a string in the format '2015-04-02T00:00:00'
+RegionPricesAsOf <- function(Region, TypeID, Dates) { # Dates as a list of strings in the format '2016-04-02T00:00:00', Example region = 10000002 (The Forge), Example TypeID = 34 (Trit)
   require(jsonlite)
-  priceHistory_addr <- paste("https://crest-tq.eveonline.com/market/10000002/types/", TypeID, "/history/", sep= "") #Fix region number
-  market.json <- fromJSON(readLines(priceHistory_addr))
+  priceHistory_addr <- paste("https://crest-tq.eveonline.com/market/",Region,"/history/?type=https://crest-tq.eveonline.com/inventory/types/",TypeID,"/", sep= "") 
+  suppressWarnings(market.json <- fromJSON(readLines(priceHistory_addr))) # throws a warning about incomplete final line
   MarketValues <- market.json$items
-  as.integer(MarketValues[MarketValues$date==Date,5])
+  MarketPrices <- numeric(length(Dates))
+  for (i in seq_along(Dates)) {
+    MarketPrices[i] <- as.numeric(MarketValues[MarketValues$date==Dates[[i]],5])
+  }
+  MarketPrices
 }
+
 
