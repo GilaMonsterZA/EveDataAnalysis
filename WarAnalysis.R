@@ -97,12 +97,4 @@ summariseItemDrops <- function(Items) {
   VictimItems
 }
 
-getItemPrices <- function (ItemList, KillDate) { #to finish
-  require(jsonlite)
-  ItemPrices <- data.frame(TypeID = numeric(length(ItemList)), JitaPrice = numeric(length(ItemList)), stringsAsFactors = FALSE)
-  for (i in seq_along(ItemList)) {
-    ItemPrices$TypeID[i] <- ItemList[[i]]
-    ItemPrices$JitaPrice[i] <- ForgePriceAsOf(ItemList[[i]], KillDate)
-  }
-  ItemPrices
-}
+

@@ -25,4 +25,14 @@ RegionPricesAsOf <- function(Region, TypeID, Dates) { # Dates as a list of strin
   MarketPrices
 }
 
-
+getItemPrices <- function (Region, TypeIDs, Dates) { #to finish
+  require(jsonlite)
+  
+  ItemPrices <- data.frame(matrix(0.0, ncol = length(Dates), nrow = length(TypeIDs)))
+  colnames(ItemPrices) <- Dates
+  
+  for (i in seq_along(TypeIDs)) {
+    ItemPrices[i,] <- RegionPricesAsOf(Region, TypeIDs[[i]], Dates)
+  }
+  cbind(TypeIDs, ItemPrices)
+}
